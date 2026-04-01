@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Demande d’accès à l’information</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+    }
+    label {
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 4px;
+      margin-bottom: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Demande d’accès à l’information</h2>
+
+<form id="requestForm">
+  <label>Marque</label>
+  <input id="brand" required>
+
+  <label>Modèle</label>
+  <input id="model" required>
+
+  <label>Numéro de série</label>
+  <input id="serial" required>
+
+  <button type="submit">Vérifier</button>
+</form>
+
+<div id="result"></div>
+
+<!-- ✅ CHARGEMENT CORRECT DU FICHIER -->
+<script src="manuals.js"></script>
+
+<script>
+document.getElementById("requestForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const brand = document.getElementById("brand").value.trim();
+  const model = document.getElementById("model").value.trim();
+  const serial = document.getElementById("serial").value.trim();
+  const result = document.getElementById("result");
+
+  const found = manuals.find(m =>
+    m.brand.toLowerCase() === brand.toLowerCase() &&
+    m.model.toLowerCase() === model.toLowerCase()
+  );
+
+  if (found) {
+    result.style.color = "green";
+    result.innerHTML =
+      "✅ Manuel disponible<br>📁 " + found.path;
+  } else {
+    result.style.color = "orange";
+    result.innerHTML = `
+      ❌ Manuel non disponible<br><br>
+      <button id="send">Demander l’information</button>
+    `;
+
+    document.getElementById("send").onclick = function () {
+      window.location.href =
+        "mailto:Charles.Lavigne5@gmail.com"
+        + "?subject=Demande de manuel"
+        + "&body=Marque: " + brand
+        + "%0D%0AModèle: " + model
+        + "%0D%0ANuméro de série: " + serial;
+    };
+  }
+});
+</script>
+
+</body>
+</html>
